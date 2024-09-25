@@ -41,5 +41,8 @@
                         {{ __('Registreer') }}
                     </x-primary-button>
                 </div>
-    </body>
-    </html>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

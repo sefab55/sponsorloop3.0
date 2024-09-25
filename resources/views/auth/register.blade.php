@@ -36,11 +36,15 @@
             <input type="text" name="telefoonnummer" placeholder="Telefoonnummer" required>
 
             <!-- Rol kiezen -->
-            <select name="rol" required>
-                @foreach(App\Models\Role::all() as $rol)
-                    <option value="{{ $rol->id }}">{{ $rol->naam }}</option>
-                @endforeach
-            </select>
+            <div class="mt-4">
+                <x-input-label for="rol" :value="__('Kies een rol')" />
+                <select id="rol" name="rol" class="block mt-1 w-full" required>
+                    @foreach(App\Models\Role::where('naam', '!=', 'admin')->get() as $rol)
+                        <option value="{{ $rol->id }}">{{ $rol->naam }}</option>
+                    @endforeach
+                </select>
+                <x-input-error :messages="$errors->get('rol')" class="mt-2" />
+            </div>
 
             <!-- Password -->
             <input type="password" name="password" placeholder="Wachtwoord" required>

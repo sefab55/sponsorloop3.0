@@ -88,11 +88,20 @@ class SponsorloopController extends Controller
      * @return \Illuminate\View\View
      */
    // Toon het inschrijfformulier voor een sponsorloop
-   public function showInschrijvenForm()
+   public function showInschrijvenForm(Request $request)
    {
+       // Haal alle sponsorlopen op voor de dropdown
        $sponsorlopen = Sponsorloop::all();
-       return view('sponsorloop.inschrijven', compact('sponsorlopen'));
+       $selectedSponsorloop = null;
+   
+       // Controleer of er een sponsorloop is geselecteerd in het GET-verzoek
+       if ($request->has('sponsorloop_id')) {
+           $selectedSponsorloop = Sponsorloop::find($request->sponsorloop_id);
+       }
+   
+       return view('sponsorloop.inschrijven', compact('sponsorlopen', 'selectedSponsorloop'));
    }
+   
     /**
      * Verwerk de inschrijving van een gebruiker voor een sponsorloop.
      *
@@ -101,32 +110,35 @@ class SponsorloopController extends Controller
      */
     // Verwerk de inschrijving van een gebruiker voor een sponsorloop
 
-public function storeInschrijven(Request $request)
-{
-    // Valideer de invoer
-    $request->validate([
-        'sponsorloop_id' => 'required|exists:sponsorloop,idSponsorloop',
-    ]);
-
-    // Haal de sponsorloop op aan de hand van de juiste kolomnaam
-    $sponsorloop = Sponsorloop::where('idSponsorloop', $request->sponsorloop_id)->firstOrFail();
-
-    // Controleer of de gebruiker al is ingeschreven voor deze sponsorloop
-    $existingEntry = $sponsorloop->gebruikers()->where('user_id', Auth::id())->exists();
-
-    if ($existingEntry) {
-        return redirect()->back()->with('error', 'Je bent al ingeschreven voor deze sponsorloop.');
+    public function storeInschrijven(Request $request)
+    {
+        // Valideer de invoer
+        $request->validate([
+            'sponsorloop_id' => 'required|exists:sponsorloop,idSponsorloop',
+            'gekozenAfstand' => 'required|numeric|min:1',
+        ]);
+    
+        // Haal de sponsorloop op aan de hand van de juiste kolomnaam
+        $sponsorloop = Sponsorloop::where('idSponsorloop', $request->sponsorloop_id)->firstOrFail();
+    
+        // Controleer of de gebruiker al is ingeschreven voor deze sponsorloop
+        $existingEntry = $sponsorloop->gebruikers()->where('user_id', Auth::id())->exists();
+    
+        if ($existingEntry) {
+            return redirect()->back()->with('error', 'Je bent al ingeschreven voor deze sponsorloop.');
+        }
+    
+        
+        // Voeg de gekozen afstand toe aan de pivot table
+        $sponsorloop->gebruikers()->attach(Auth::id(), ['gekozenAfstand' => $request->gekozenAfstand]);
+    
+        // Maak een betaalverzoek en verstuur de e-mail
+        $this->createPaymentRequest(Auth::id(), $sponsorloop->idSponsorloop);
+    
+        // Redirect met een success message
+        return redirect()->route('dashboard')->with('success', 'Je bent succesvol ingeschreven voor de sponsorloop en het betaalverzoek is verstuurd naar je e-mail!');
     }
-
-    // Koppel de gebruiker aan de sponsorloop (inschrijving)
-    $sponsorloop->gebruikers()->attach(Auth::id());
-
-    // Maak een betaalverzoek en verstuur de e-mail
-    $this->createPaymentRequest(Auth::id(), $sponsorloop->idSponsorloop);
-
-    // Redirect met een success message
-    return redirect()->route('dashboard')->with('success', 'Je bent succesvol ingeschreven voor de sponsorloop en het betaalverzoek is verstuurd naar je e-mail!');
-}
+    
 
 //dit is logica voor de payments
 public function createPaymentRequest($userId, $sponsorloopId)

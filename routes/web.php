@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SponsorloopController;
 use App\Http\Controllers\ResultaatController;
+use App\Http\Controllers\DashboardController;
 
 
 // Route voor de welkomstpagina
@@ -18,6 +19,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
 // Routes voor profielbeheer, alleen toegankelijk voor ingelogde gebruikers
 Route::middleware('auth')->group(function () {
@@ -29,8 +32,10 @@ Route::middleware('auth')->group(function () {
 // Route voor het inschrijven voor een sponsorloop
 Route::get('/sponsorloop/inschrijven', [SponsorloopController::class, 'showInschrijvenForm'])->name('sponsorloop.inschrijven');
 Route::post('/sponsorloop/inschrijven', [SponsorloopController::class, 'storeInschrijven'])->name('sponsorloop.storeInschrijven');
+
 // Route voor het creëren van een betaalverzoek (optioneel, als je het direct wilt testen)
 Route::get('/sponsorloop/payment/{userId}/{sponsorloopId}', [SponsorloopController::class, 'createPaymentRequest'])->name('sponsorloop.createPaymentRequest');
+
 
 //betaalpagina.
 Route::get('/payment/success', function () {
@@ -51,6 +56,8 @@ Route::post('/resultaat/register', [ResultaatController::class, 'registerDevice'
 Route::get('/resultaat/overzicht', [ResultaatController::class, 'showResultaatOverzicht'])->name('resultaat.overzicht');
 
 
+
+Route::get('/sponsorloop/{id}/details', [SponsorloopController::class, 'getSponsorloopDetails']);
 
 
 // Auth routes

@@ -12,6 +12,6 @@
     <p>Bedankt voor je inschrijving. Klik op de onderstaande link om de betaling te voltooien:</p>
     <a href="{{ $paymentUrl }}">Betaal nu</a>
     <p>Als je vragen hebt, neem dan contact met ons op.</p>
-    <p>Met vriendelijke groet,<br>Sponserloop Team</p>
+    <p>Met vriendelijke groet,<br>Sponsorloop Team</p>
 </body>
 </html>

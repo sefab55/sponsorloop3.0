@@ -9,12 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class ResultaatController extends Controller
 {
-    // Toon formulier voor apparaatregistratie
-    public function showRegisterDeviceForm()
-    {
-        $sponsorlopen = Sponsorloop::all();
-        return view('resultaat.register_device', compact('sponsorlopen'));
-    }
+   // Haal de sponsorlopen waarvoor de gebruiker is ingeschreven
+public function showRegisterDeviceForm()
+{
+    $user = Auth::user();
+
+    // Haal alleen de sponsorlopen op waarvoor de gebruiker is ingeschreven
+    $sponsorlopen = $user->sponsorlopen;
+
+    return view('resultaat.register_device', compact('sponsorlopen'));
+}
+
 
     // Verwerk registratie van telefoon of smartwatch
     public function registerDevice(Request $request)

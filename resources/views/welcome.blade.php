@@ -30,7 +30,7 @@
 
     <div class="right-section">
         <h2>Welkom op SPONSORYOU</h2>
-        <p>hoi.</p>
+        <p></p>
     </div>
 </div>
 

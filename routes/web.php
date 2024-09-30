@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SponsorloopController;
 use App\Http\Controllers\ResultaatController;
 use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\SponsorloopOverzichtController;
 
 // Route voor de welkomstpagina
 Route::get('/', function () {
@@ -20,6 +20,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::get('/donateur', [SponsorloopOverzichtController::class, 'overzicht'])->name('overzicht');
+Route::get('/sponsorloop/overzicht/{sponsorloop_id}', [SponsorloopOverzichtController::class, 'overzicht'])->name('sponsorloop.overzicht');
+
 
 
 // Routes voor profielbeheer, alleen toegankelijk voor ingelogde gebruikers
@@ -58,6 +62,7 @@ Route::get('/resultaat/overzicht', [ResultaatController::class, 'showResultaatOv
 
 
 Route::get('/sponsorloop/{id}/details', [SponsorloopController::class, 'getSponsorloopDetails']);
+
 
 
 // Auth routes

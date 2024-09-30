@@ -60,8 +60,20 @@ class User extends Authenticatable
      */
     public function sponsorlopen()
     {
-        return $this->belongsToMany(Sponsorloop::class, 'gebruiker_has_sponsorloop', 'user_id', 'Sponsorloop_idSponsorloop');
+        return $this->belongsToMany(Sponsorloop::class, 'gebruiker_has_sponsorloop', 'user_id', 'sponsorloop_id')
+                    ->withPivot('gekozenAfstand');
     }
+    
+    public function donaties()
+    {
+        return $this->hasMany(Donateur::class, 'sponsor_id');
+    }
+    
+    public function gelopenResultaten()
+    {
+        return $this->hasMany(Donateur::class, 'loper_id');
+    }
+    
 
     /**
      * hier controlleerd of de user een admin is.

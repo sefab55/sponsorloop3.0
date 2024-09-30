@@ -41,6 +41,8 @@
 
             <a href="{{ route('resultaat.register') }}" class="dashboard-button">Registreer Afstand</a>
             <a href="{{ route('resultaat.overzicht') }}" class="dashboard-button">Bekijk Overzicht</a>
+            <a href="{{ route('overzicht') }}" class="dashboard-button">bekijk alle ingeschreven gebruikers</a>
+    
         </div>
 
         <!-- Sponsorloop Informatie -->
@@ -57,6 +59,7 @@
             </div>
         </div>
     </div>
-    
+    <div class="button-container">
+   
 </body>
 </html>
